@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in</title>
+
+    <link href="./tailwind.css" rel="stylesheet" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #1f1e1e;
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="p-16">
+    <div class="flex flex-col items-center">
+        <div class="p-14 border border-[#2e2d2d] rounded-md shadow-md flex flex-col items-center max-w-[48rem]">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="text-gray-400 mb-3" width="25" fill="#9ca3af"><path d="M144 144l0 48 160 0 0-48c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192l0-48C80 64.5 144.5 0 224 0s144 64.5 144 144l0 48 16 0c35.3 0 64 28.7 64 64l0 192c0 35.3-28.7 64-64 64L64 512c-35.3 0-64-28.7-64-64L0 256c0-35.3 28.7-64 64-64l16 0z"/></svg>
+
+            <h3 class="text-xl font-medium text-center mb-1 text-gray-200">Log in</h3>
+            <div class="w-full text-center max-w-xl text-gray-500 dark:text-gray-400 mb-8">In order to create a new QR code, you have to enter the administrator password.</div>
+
+            <form class="w-full" method="POST" action="/login">
+                <input type="text" name="username" id="login" class="peer border border-[#3c3c3a] bg-[#1f1e1e] py-1.5 rounded-md w-full focus:outline-none focus:ring-2 ring-[#344c96] px-3 text-gray-200 placeholder:text-[#4d4b4b] mb-3" placeholder="Login">
+                <input type="password" name="password" id="password" class="peer border border-[#3c3c3a] bg-[#1f1e1e] py-1.5 rounded-md w-full focus:outline-none focus:ring-2 ring-[#344c96] px-3 text-gray-200 placeholder:text-[#4d4b4b] data-[error=true]:border-red-500" placeholder="Password" data-error="false">
+                <span class="hidden peer-data-[error=true]:flex text-xs self-start text-red-500 mt-0.5 w-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="12" class="mr-1" fill="#ef4444"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c-13.3 0-24 10.7-24 24l0 112c0 13.3 10.7 24 24 24s24-10.7 24-24l0-112c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg>
+                    <span id="incorrectText">Provided password is incorrect!</span>
+                </span>
+
+                <button type="submit" class="bg-[#4260b6] hover:bg-[#4f73cf] transition duration-150 text-white font-medium py-1.5 px-4 mt-3 rounded-md w-full disabled:cursor-not-allowed disabled:bg-[#282727] disabled:text-[#878787]" disabled>Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        $('#password').on('input', function() {
+            if ($(this).val().length > 0) {
+                $('button').removeAttr('disabled');
+            } else {
+                $('button').attr('disabled', 'disabled');
+            }
+        });
+
+        $('#password').on('blur', function() {
+            if ($(this).val().length > 0) {
+                $(this).attr('data-error', 'false');
+                $('span').addClass('hidden');
+            } else {
+                $(this).attr('data-error', 'true');
+                $('span').removeClass('hidden');
+            }
+        });
+
+        $('#password').on('focus', function() {
+            $(this).attr('data-error', 'false');
+            $('span').addClass('hidden');
+        });
+
+        $('button').on('click', function(event) {
+            event.preventDefault();
+            $('form').submit();
+            $('button').attr('disabled', 'disabled');
+            $('#password').removeAttr('disabled');
+        });
+
+        // Get URL parameters ?error=true
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error');
+        if (error === 'true') {
+            $('#password').attr('data-error', 'true');
+            
+            // Remove the error parameter from the URL
+            urlParams.delete('error');
+            const newUrl = window.location.pathname + '?' + urlParams.toString();
+            window.history.replaceState({}, document.title, newUrl);
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    <link href="./tailwind.css" rel="stylesheet" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #1f1e1e;
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="p-16">
+    <div class="flex flex-col items-center">
+        <div class="border border-[#2e2d2d] rounded-md shadow-md flex flex-row items-center max-w-[48rem]">
+
+            <div class="flex flex-col p-4">
+                <form method="POST" action="/add">
+
+                <h3 class="text-xl font-medium mb-1 text-gray-200">Create a new short link</h3>
+                <!-- <div class="w-full text-center max-w-xl text-gray-500 dark:text-gray-400 mb-8">
+                    In order to create a new QR code, you have to enter the administrator password.
+                </div> -->
+
+                <label for="longurl" class="text-gray-400 text-xs mb-0.5">Redirect to</label>
+                <input type="text" name="longurl" id="longurl"
+                class="peer border border-[#3c3c3a] bg-[#1f1e1e] py-1.5 rounded-md w-full focus:outline-none focus:ring-2
+                ring-[#344c96] px-3 text-gray-200 placeholder:text-[#4d4b4b] data-[error=true]:border-red-500"
+                placeholder="https://google.com/teapot" data-error="false">
+                <label id="infoOther" class="hidden text-gray-400 text-xs mt-0.5">Devices which doesn't run any of these operating systems will be redirected to this URL</label>
+                <span class="hidden peer-data-[error=true]:flex text-xs self-start text-red-500 mt-0.5 w-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="12" class="mr-1" fill="#ef4444">
+                        <path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c-13.3 0-24 10.7-24 24l0 112c0 13.3 10.7 24 24 24s24-10.7 24-24l0-112c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/>
+                    </svg>
+                    <span id="incorrectText">This doesn't seem to be a correct URL...</span>
+                </span>
+
+                <div class="inline-flex mt-3 mb-3 gap-x-2 gap-y-1 flex-wrap">
+                    <button 
+                        id="addWindows" class="flex items-center bg-[#1f1e1e] hover:bg-[#2d2d2d] border border-[#3c3c3a] transition-all duration-200 text-[#c0c0c0] font-medium py-1.5 px-4 rounded-md w-min disabled:cursor-not-allowed disabled:bg-[#282727] disabled:text-[#878787] text-xs">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="14" fill="#c0c0c0"><path d="M0 32h214.6v214.6H0V32zm233.4 0H448v214.6H233.4V32zM0 265.4h214.6V480H0V265.4zm233.4 0H448V480H233.4V265.4z"/></svg>
+                        <span class="ml-2 whitespace-nowrap">Add Windows</span>
+                    </button>
+                    <button 
+                        id="addLinux" class="flex items-center bg-[#1f1e1e] hover:bg-[#2d2d2d] border border-[#3c3c3a] transition-all duration-200 text-[#c0c0c0] font-medium py-1.5 px-4 rounded-md w-min disabled:cursor-not-allowed disabled:bg-[#282727] disabled:text-[#878787] text-xs">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="14" fill="#c0c0c0"><path d="M220.8 123.3c1 .5 1.8 1.7 3 1.7 1.1 0 2.8-.4 2.9-1.5.2-1.4-1.9-2.3-3.2-2.9-1.7-.7-3.9-1-5.5-.1-.4.2-.8.7-.6 1.1.3 1.3 2.3 1.1 3.4 1.7zm-21.9 1.7c1.2 0 2-1.2 3-1.7 1.1-.6 3.1-.4 3.5-1.6.2-.4-.2-.9-.6-1.1-1.6-.9-3.8-.6-5.5.1-1.3.6-3.4 1.5-3.2 2.9.1 1 1.8 1.5 2.8 1.4zM420 403.8c-3.6-4-5.3-11.6-7.2-19.7-1.8-8.1-3.9-16.8-10.5-22.4-1.3-1.1-2.6-2.1-4-2.9-1.3-.8-2.7-1.5-4.1-2 9.2-27.3 5.6-54.5-3.7-79.1-11.4-30.1-31.3-56.4-46.5-74.4-17.1-21.5-33.7-41.9-33.4-72C311.1 85.4 315.7.1 234.8 0 132.4-.2 158 103.4 156.9 135.2c-1.7 23.4-6.4 41.8-22.5 64.7-18.9 22.5-45.5 58.8-58.1 96.7-6 17.9-8.8 36.1-6.2 53.3-6.5 5.8-11.4 14.7-16.6 20.2-4.2 4.3-10.3 5.9-17 8.3s-14 6-18.5 14.5c-2.1 3.9-2.8 8.1-2.8 12.4 0 3.9.6 7.9 1.2 11.8 1.2 8.1 2.5 15.7.8 20.8-5.2 14.4-5.9 24.4-2.2 31.7 3.8 7.3 11.4 10.5 20.1 12.3 17.3 3.6 40.8 2.7 59.3 12.5 19.8 10.4 39.9 14.1 55.9 10.4 11.6-2.6 21.1-9.6 25.9-20.2 12.5-.1 26.3-5.4 48.3-6.6 14.9-1.2 33.6 5.3 55.1 4.1.6 2.3 1.4 4.6 2.5 6.7v.1c8.3 16.7 23.8 24.3 40.3 23 16.6-1.3 34.1-11 48.3-27.9 13.6-16.4 36-23.2 50.9-32.2 7.4-4.5 13.4-10.1 13.9-18.3.4-8.2-4.4-17.3-15.5-29.7zM223.7 87.3c9.8-22.2 34.2-21.8 44-.4 6.5 14.2 3.6 30.9-4.3 40.4-1.6-.8-5.9-2.6-12.6-4.9 1.1-1.2 3.1-2.7 3.9-4.6 4.8-11.8-.2-27-9.1-27.3-7.3-.5-13.9 10.8-11.8 23-4.1-2-9.4-3.5-13-4.4-1-6.9-.3-14.6 2.9-21.8zM183 75.8c10.1 0 20.8 14.2 19.1 33.5-3.5 1-7.1 2.5-10.2 4.6 1.2-8.9-3.3-20.1-9.6-19.6-8.4.7-9.8 21.2-1.8 28.1 1 .8 1.9-.2-5.9 5.5-15.6-14.6-10.5-52.1 8.4-52.1zm-13.6 60.7c6.2-4.6 13.6-10 14.1-10.5 4.7-4.4 13.5-14.2 27.9-14.2 7.1 0 15.6 2.3 25.9 8.9 6.3 4.1 11.3 4.4 22.6 9.3 8.4 3.5 13.7 9.7 10.5 18.2-2.6 7.1-11 14.4-22.7 18.1-11.1 3.6-19.8 16-38.2 14.9-3.9-.2-7-1-9.6-2.1-8-3.5-12.2-10.4-20-15-8.6-4.8-13.2-10.4-14.7-15.3-1.4-4.9 0-9 4.2-12.3zm3.3 334c-2.7 35.1-43.9 34.4-75.3 18-29.9-15.8-68.6-6.5-76.5-21.9-2.4-4.7-2.4-12.7 2.6-26.4v-.2c2.4-7.6.6-16-.6-23.9-1.2-7.8-1.8-15 .9-20 3.5-6.7 8.5-9.1 14.8-11.3 10.3-3.7 11.8-3.4 19.6-9.9 5.5-5.7 9.5-12.9 14.3-18 5.1-5.5 10-8.1 17.7-6.9 8.1 1.2 15.1 6.8 21.9 16l19.6 35.6c9.5 19.9 43.1 48.4 41 68.9zm-1.4-25.9c-4.1-6.6-9.6-13.6-14.4-19.6 7.1 0 14.2-2.2 16.7-8.9 2.3-6.2 0-14.9-7.4-24.9-13.5-18.2-38.3-32.5-38.3-32.5-13.5-8.4-21.1-18.7-24.6-29.9s-3-23.3-.3-35.2c5.2-22.9 18.6-45.2 27.2-59.2 2.3-1.7.8 3.2-8.7 20.8-8.5 16.1-24.4 53.3-2.6 82.4.6-20.7 5.5-41.8 13.8-61.5 12-27.4 37.3-74.9 39.3-112.7 1.1.8 4.6 3.2 6.2 4.1 4.6 2.7 8.1 6.7 12.6 10.3 12.4 10 28.5 9.2 42.4 1.2 6.2-3.5 11.2-7.5 15.9-9 9.9-3.1 17.8-8.6 22.3-15 7.7 30.4 25.7 74.3 37.2 95.7 6.1 11.4 18.3 35.5 23.6 64.6 3.3-.1 7 .4 10.9 1.4 13.8-35.7-11.7-74.2-23.3-84.9-4.7-4.6-4.9-6.6-2.6-6.5 12.6 11.2 29.2 33.7 35.2 59 2.8 11.6 3.3 23.7.4 35.7 16.4 6.8 35.9 17.9 30.7 34.8-2.2-.1-3.2 0-4.2 0 3.2-10.1-3.9-17.6-22.8-26.1-19.6-8.6-36-8.6-38.3 12.5-12.1 4.2-18.3 14.7-21.4 27.3-2.8 11.2-3.6 24.7-4.4 39.9-.5 7.7-3.6 18-6.8 29-32.1 22.9-76.7 32.9-114.3 7.2zm257.4-11.5c-.9 16.8-41.2 19.9-63.2 46.5-13.2 15.7-29.4 24.4-43.6 25.5s-26.5-4.8-33.7-19.3c-4.7-11.1-2.4-23.1 1.1-36.3 3.7-14.2 9.2-28.8 9.9-40.6.8-15.2 1.7-28.5 4.2-38.7 2.6-10.3 6.6-17.2 13.7-21.1.3-.2.7-.3 1-.5.8 13.2 7.3 26.6 18.8 29.5 12.6 3.3 30.7-7.5 38.4-16.3 9-.3 15.7-.9 22.6 5.1 9.9 8.5 7.1 30.3 17.1 41.6 10.6 11.6 14 19.5 13.7 24.6zM173.3 148.7c2 1.9 4.7 4.5 8 7.1 6.6 5.2 15.8 10.6 27.3 10.6 11.6 0 22.5-5.9 31.8-10.8 4.9-2.6 10.9-7 14.8-10.4s5.9-6.3 3.1-6.6-2.6 2.6-6 5.1c-4.4 3.2-9.7 7.4-13.9 9.8-7.4 4.2-19.5 10.2-29.9 10.2s-18.7-4.8-24.9-9.7c-3.1-2.5-5.7-5-7.7-6.9-1.5-1.4-1.9-4.6-4.3-4.9-1.4-.1-1.8 3.7 1.7 6.5z"/></svg>
+                        <span class="ml-2 whitespace-nowrap">Add Linux</span>
+                    </button>
+                    <button 
+                        id="addAndroid" class="flex items-center bg-[#1f1e1e] hover:bg-[#2d2d2d] border border-[#3c3c3a] transition-all duration-200 text-[#c0c0c0] font-medium py-1.5 px-4 rounded-md w-min disabled:cursor-not-allowed disabled:bg-[#282727] disabled:text-[#878787] text-xs">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height="14" fill="#c0c0c0"><path d="M420.55,301.93a24,24,0,1,1,24-24,24,24,0,0,1-24,24m-265.1,0a24,24,0,1,1,24-24,24,24,0,0,1-24,24m273.7-144.48,47.94-83a10,10,0,1,0-17.27-10h0l-48.54,84.07a301.25,301.25,0,0,0-246.56,0L116.18,64.45a10,10,0,1,0-17.27,10h0l47.94,83C64.53,202.22,8.24,285.55,0,384H576c-8.24-98.45-64.54-181.78-146.85-226.55"/></svg>
+                        <span class="ml-2 whitespace-nowrap">Add Android</span>
+                    </button>
+                    <button 
+                        id="addiOS" class="flex items-center bg-[#1f1e1e] hover:bg-[#2d2d2d] border border-[#3c3c3a] transition-all duration-200 text-[#c0c0c0] font-medium py-1.5 px-4 rounded-md w-min disabled:cursor-not-allowed disabled:bg-[#282727] disabled:text-[#878787] text-xs">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" height="14" fill="#c0c0c0"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+                        <span class="ml-2 whitespace-nowrap">Add iOS</span>
+                    </button>
+                    <button 
+                        id="addmacOS" class="flex items-center bg-[#1f1e1e] hover:bg-[#2d2d2d] border border-[#3c3c3a] transition-all duration-200 text-[#c0c0c0] font-medium py-1.5 px-4 rounded-md w-min disabled:cursor-not-allowed disabled:bg-[#282727] disabled:text-[#878787] text-xs">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" height="14" fill="#c0c0c0"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+                        <span class="ml-2 whitespace-nowrap">Add macOS</span>
+                    </button>
+                    <button 
+                        id="addChromeOS" class="flex items-center bg-[#1f1e1e] hover:bg-[#2d2d2d] border border-[#3c3c3a] transition-all duration-200 text-[#c0c0c0] font-medium py-1.5 px-4 rounded-md w-min disabled:cursor-not-allowed disabled:bg-[#282727] disabled:text-[#878787] text-xs">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height="14" fill="#c0c0c0"><path d="M0 256C0 209.4 12.47 165.6 34.27 127.1L144.1 318.3C166 357.5 207.9 384 256 384C270.3 384 283.1 381.7 296.8 377.4L220.5 509.6C95.9 492.3 0 385.3 0 256zM365.1 321.6C377.4 302.4 384 279.1 384 256C384 217.8 367.2 183.5 340.7 160H493.4C505.4 189.6 512 222.1 512 256C512 397.4 397.4 511.1 256 512L365.1 321.6zM477.8 128H256C193.1 128 142.3 172.1 130.5 230.7L54.19 98.47C101 38.53 174 0 256 0C350.8 0 433.5 51.48 477.8 128V128zM168 256C168 207.4 207.4 168 256 168C304.6 168 344 207.4 344 256C344 304.6 304.6 344 256 344C207.4 344 168 304.6 168 256z"/></svg>
+                        <span class="ml-2 whitespace-nowrap">Add ChromeOS</span>
+                    </button>
+                </div>
+
+                <div id="windowsDiv" class="hidden">
+                    <label for="windows" class="text-gray-400 text-xs mb-0.5">Redirect to... on Windows devices</label>
+                    <div class="relative w-full">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="16" fill="#c0c0c0">
+                                <path d="M0 32h214.6v214.6H0V32zm233.4 0H448v214.6H233.4V32zM0 265.4h214.6V480H0V265.4zm233.4 0H448V480H233.4V265.4z"/>
+                            </svg>
+                        </div>
+                        <input type="text" name="windows" id="windows"
+                            class="peer border border-[#3c3c3a] bg-[#1f1e1e] py-1.5 rounded-md w-full focus:outline-none focus:ring-2
+                            ring-[#344c96] px-3 pl-9 text-gray-200 placeholder:text-[#4d4b4b] data-[error=true]:border-red-500"
+                            placeholder="https://google.com/teapot" data-error="false">
+                    </div>
+                </div>
+
+                <div id="linuxDiv" class="hidden">
+                    <label for="linux" class="text-gray-400 text-xs mb-0.5 mt-2">Redirect to... on Linux devices</label>
+                    <div class="relative w-full">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="16" fill="#c0c0c0"><path d="M220.8 123.3c1 .5 1.8 1.7 3 1.7 1.1 0 2.8-.4 2.9-1.5.2-1.4-1.9-2.3-3.2-2.9-1.7-.7-3.9-1-5.5-.1-.4.2-.8.7-.6 1.1.3 1.3 2.3 1.1 3.4 1.7zm-21.9 1.7c1.2 0 2-1.2 3-1.7 1.1-.6 3.1-.4 3.5-1.6.2-.4-.2-.9-.6-1.1-1.6-.9-3.8-.6-5.5.1-1.3.6-3.4 1.5-3.2 2.9.1 1 1.8 1.5 2.8 1.4zM420 403.8c-3.6-4-5.3-11.6-7.2-19.7-1.8-8.1-3.9-16.8-10.5-22.4-1.3-1.1-2.6-2.1-4-2.9-1.3-.8-2.7-1.5-4.1-2 9.2-27.3 5.6-54.5-3.7-79.1-11.4-30.1-31.3-56.4-46.5-74.4-17.1-21.5-33.7-41.9-33.4-72C311.1 85.4 315.7.1 234.8 0 132.4-.2 158 103.4 156.9 135.2c-1.7 23.4-6.4 41.8-22.5 64.7-18.9 22.5-45.5 58.8-58.1 96.7-6 17.9-8.8 36.1-6.2 53.3-6.5 5.8-11.4 14.7-16.6 20.2-4.2 4.3-10.3 5.9-17 8.3s-14 6-18.5 14.5c-2.1 3.9-2.8 8.1-2.8 12.4 0 3.9.6 7.9 1.2 11.8 1.2 8.1 2.5 15.7.8 20.8-5.2 14.4-5.9 24.4-2.2 31.7 3.8 7.3 11.4 10.5 20.1 12.3 17.3 3.6 40.8 2.7 59.3 12.5 19.8 10.4 39.9 14.1 55.9 10.4 11.6-2.6 21.1-9.6 25.9-20.2 12.5-.1 26.3-5.4 48.3-6.6 14.9-1.2 33.6 5.3 55.1 4.1.6 2.3 1.4 4.6 2.5 6.7v.1c8.3 16.7 23.8 24.3 40.3 23 16.6-1.3 34.1-11 48.3-27.9 13.6-16.4 36-23.2 50.9-32.2 7.4-4.5 13.4-10.1 13.9-18.3.4-8.2-4.4-17.3-15.5-29.7zM223.7 87.3c9.8-22.2 34.2-21.8 44-.4 6.5 14.2 3.6 30.9-4.3 40.4-1.6-.8-5.9-2.6-12.6-4.9 1.1-1.2 3.1-2.7 3.9-4.6 4.8-11.8-.2-27-9.1-27.3-7.3-.5-13.9 10.8-11.8 23-4.1-2-9.4-3.5-13-4.4-1-6.9-.3-14.6 2.9-21.8zM183 75.8c10.1 0 20.8 14.2 19.1 33.5-3.5 1-7.1 2.5-10.2 4.6 1.2-8.9-3.3-20.1-9.6-19.6-8.4.7-9.8 21.2-1.8 28.1 1 .8 1.9-.2-5.9 5.5-15.6-14.6-10.5-52.1 8.4-52.1zm-13.6 60.7c6.2-4.6 13.6-10 14.1-10.5 4.7-4.4 13.5-14.2 27.9-14.2 7.1 0 15.6 2.3 25.9 8.9 6.3 4.1 11.3 4.4 22.6 9.3 8.4 3.5 13.7 9.7 10.5 18.2-2.6 7.1-11 14.4-22.7 18.1-11.1 3.6-19.8 16-38.2 14.9-3.9-.2-7-1-9.6-2.1-8-3.5-12.2-10.4-20-15-8.6-4.8-13.2-10.4-14.7-15.3-1.4-4.9 0-9 4.2-12.3zm3.3 334c-2.7 35.1-43.9 34.4-75.3 18-29.9-15.8-68.6-6.5-76.5-21.9-2.4-4.7-2.4-12.7 2.6-26.4v-.2c2.4-7.6.6-16-.6-23.9-1.2-7.8-1.8-15 .9-20 3.5-6.7 8.5-9.1 14.8-11.3 10.3-3.7 11.8-3.4 19.6-9.9 5.5-5.7 9.5-12.9 14.3-18 5.1-5.5 10-8.1 17.7-6.9 8.1 1.2 15.1 6.8 21.9 16l19.6 35.6c9.5 19.9 43.1 48.4 41 68.9zm-1.4-25.9c-4.1-6.6-9.6-13.6-14.4-19.6 7.1 0 14.2-2.2 16.7-8.9 2.3-6.2 0-14.9-7.4-24.9-13.5-18.2-38.3-32.5-38.3-32.5-13.5-8.4-21.1-18.7-24.6-29.9s-3-23.3-.3-35.2c5.2-22.9 18.6-45.2 27.2-59.2 2.3-1.7.8 3.2-8.7 20.8-8.5 16.1-24.4 53.3-2.6 82.4.6-20.7 5.5-41.8 13.8-61.5 12-27.4 37.3-74.9 39.3-112.7 1.1.8 4.6 3.2 6.2 4.1 4.6 2.7 8.1 6.7 12.6 10.3 12.4 10 28.5 9.2 42.4 1.2 6.2-3.5 11.2-7.5 15.9-9 9.9-3.1 17.8-8.6 22.3-15 7.7 30.4 25.7 74.3 37.2 95.7 6.1 11.4 18.3 35.5 23.6 64.6 3.3-.1 7 .4 10.9 1.4 13.8-35.7-11.7-74.2-23.3-84.9-4.7-4.6-4.9-6.6-2.6-6.5 12.6 11.2 29.2 33.7 35.2 59 2.8 11.6 3.3 23.7.4 35.7 16.4 6.8 35.9 17.9 30.7 34.8-2.2-.1-3.2 0-4.2 0 3.2-10.1-3.9-17.6-22.8-26.1-19.6-8.6-36-8.6-38.3 12.5-12.1 4.2-18.3 14.7-21.4 27.3-2.8 11.2-3.6 24.7-4.4 39.9-.5 7.7-3.6 18-6.8 29-32.1 22.9-76.7 32.9-114.3 7.2zm257.4-11.5c-.9 16.8-41.2 19.9-63.2 46.5-13.2 15.7-29.4 24.4-43.6 25.5s-26.5-4.8-33.7-19.3c-4.7-11.1-2.4-23.1 1.1-36.3 3.7-14.2 9.2-28.8 9.9-40.6.8-15.2 1.7-28.5 4.2-38.7 2.6-10.3 6.6-17.2 13.7-21.1.3-.2.7-.3 1-.5.8 13.2 7.3 26.6 18.8 29.5 12.6 3.3 30.7-7.5 38.4-16.3 9-.3 15.7-.9 22.6 5.1 9.9 8.5 7.1 30.3 17.1 41.6 10.6 11.6 14 19.5 13.7 24.6zM173.3 148.7c2 1.9 4.7 4.5 8 7.1 6.6 5.2 15.8 10.6 27.3 10.6 11.6 0 22.5-5.9 31.8-10.8 4.9-2.6 10.9-7 14.8-10.4s5.9-6.3 3.1-6.6-2.6 2.6-6 5.1c-4.4 3.2-9.7 7.4-13.9 9.8-7.4 4.2-19.5 10.2-29.9 10.2s-18.7-4.8-24.9-9.7c-3.1-2.5-5.7-5-7.7-6.9-1.5-1.4-1.9-4.6-4.3-4.9-1.4-.1-1.8 3.7 1.7 6.5z"/></svg>
+                        </div>
+                        <input type="text" name="linux" id="linux"
+                            class="peer border border-[#3c3c3a] bg-[#1f1e1e] py-1.5 rounded-md w-full focus:outline-none focus:ring-2
+                            ring-[#344c96] px-3 pl-9 text-gray-200 placeholder:text-[#4d4b4b] data-[error=true]:border-red-500"
+                            placeholder="https://google.com/teapot" data-error="false">
+                    </div>
+                </div>
+
+                <div id="androidDiv" class="hidden">
+                    <label for="android" class="text-gray-400 text-xs mb-0.5 mt-2">Redirect to... on Android devices</label>
+                    <div class="relative w-full">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height="16" fill="#c0c0c0"><path d="M420.55,301.93a24,24,0,1,1,24-24,24,24,0,0,1-24,24m-265.1,0a24,24,0,1,1,24-24,24,24,0,0,1-24,24m273.7-144.48,47.94-83a10,10,0,1,0-17.27-10h0l-48.54,84.07a301.25,301.25,0,0,0-246.56,0L116.18,64.45a10,10,0,1,0-17.27,10h0l47.94,83C64.53,202.22,8.24,285.55,0,384H576c-8.24-98.45-64.54-181.78-146.85-226.55"/></svg>
+                        </div>
+                        <input type="text" name="android" id="android"
+                            class="peer border border-[#3c3c3a] bg-[#1f1e1e] py-1.5 rounded-md w-full focus:outline-none focus:ring-2
+                            ring-[#344c96] px-3 pl-9 text-gray-200 placeholder:text-[#4d4b4b] data-[error=true]:border-red-500"
+                            placeholder="https://google.com/teapot" data-error="false">
+                    </div>
+                </div>
+
+                <div id="iOSDiv" class="hidden">
+                    <label for="ios" class="text-gray-400 text-xs mb-0.5 mt-2">Redirect to... on iOS devices</label>
+                    <div class="relative w-full">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" height="16" fill="#c0c0c0"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+                        </div>
+                        <input type="text" name="ios" id="ios"
+                            class="peer border border-[#3c3c3a] bg-[#1f1e1e] py-1.5 rounded-md w-full focus:outline-none focus:ring-2
+                            ring-[#344c96] px-3 pl-9 text-gray-200 placeholder:text-[#4d4b4b] data-[error=true]:border-red-500"
+                            placeholder="https://google.com/teapot" data-error="false">
+                    </div>
+                </div>
+
+                <div id="macOSDiv" class="hidden">
+                    <label for="macos" class="text-gray-400 text-xs mb-0.5 mt-2">Redirect to... on macOS devices</label>
+                    <div class="relative w-full">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" height="16" fill="#c0c0c0"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+                        </div>
+                        <input type="text" name="macos" id="macos"
+                            class="peer border border-[#3c3c3a] bg-[#1f1e1e] py-1.5 rounded-md w-full focus:outline-none focus:ring-2
+                            ring-[#344c96] px-3 pl-9 text-gray-200 placeholder:text-[#4d4b4b] data-[error=true]:border-red-500"
+                            placeholder="https://google.com/teapot" data-error="false">
+                    </div>
+                </div>
+                
+                <div id="chromeOSDiv" class="hidden">
+                    <label for="chromeos" class="text-gray-400 text-xs mb-0.5 mt-2">Redirect to... on ChromeOS devices</label>
+                    <div class="relative w-full">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height="16" fill="#c0c0c0"><path d="M0 256C0 209.4 12.47 165.6 34.27 127.1L144.1 318.3C166 357.5 207.9 384 256 384C270.3 384 283.1 381.7 296.8 377.4L220.5 509.6C95.9 492.3 0 385.3 0 256zM365.1 321.6C377.4 302.4 384 279.1 384 256C384 217.8 367.2 183.5 340.7 160H493.4C505.4 189.6 512 222.1 512 256C512 397.4 397.4 511.1 256 512L365.1 321.6zM477.8 128H256C193.1 128 142.3 172.1 130.5 230.7L54.19 98.47C101 38.53 174 0 256 0C350.8 0 433.5 51.48 477.8 128V128zM168 256C168 207.4 207.4 168 256 168C304.6 168 344 207.4 344 256C344 304.6 304.6 344 256 344C207.4 344 168 304.6 168 256z"/></svg>
+                        </div>
+                        <input type="text" name="chromeos" id="chromeos"
+                            class="peer border border-[#3c3c3a] bg-[#1f1e1e] py-1.5 rounded-md w-full focus:outline-none focus:ring-2
+                            ring-[#344c96] px-3 pl-9 text-gray-200 placeholder:text-[#4d4b4b] data-[error=true]:border-red-500"
+                            placeholder="https://google.com/teapot" data-error="false">
+                    </div>
+                </div>
+
+                <button id="submit" type="submit" class="bg-[#4260b6] hover:bg-[#4f73cf] transition duration-150 text-white font-medium py-1.5 px-4 mt-3 rounded-md w-full disabled:cursor-not-allowed disabled:bg-[#282727] disabled:text-[#878787]" disabled>Create URL</button>
+
+                </form>
+            </div>
+
+            <div class="flex flex-col justify-center items-center ml-3 my-3 border-l border-[#2e2d2d] p-4" id="qrContainer">
+
+                <div id="shortenedUrlText" class="hidden">
+                    <h3 class="text-lg text-center text-gray-200">Here is your shortened URL!</h3>
+                </div>
+
+                <div class="aspect-square bg-[#2e2d2d] rounded-md w-36 h-36 flex flex-col justify-center items-center" id="qrCodeBox">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="#6e6d6d" class="size-1/2"><path d="M0 80C0 53.5 21.5 32 48 32l96 0c26.5 0 48 21.5 48 48l0 96c0 26.5-21.5 48-48 48l-96 0c-26.5 0-48-21.5-48-48L0 80zM64 96l0 64 64 0 0-64L64 96zM0 336c0-26.5 21.5-48 48-48l96 0c26.5 0 48 21.5 48 48l0 96c0 26.5-21.5 48-48 48l-96 0c-26.5 0-48-21.5-48-48l0-96zm64 16l0 64 64 0 0-64-64 0zM304 32l96 0c26.5 0 48 21.5 48 48l0 96c0 26.5-21.5 48-48 48l-96 0c-26.5 0-48-21.5-48-48l0-96c0-26.5 21.5-48 48-48zm80 64l-64 0 0 64 64 0 0-64zM256 304c0-8.8 7.2-16 16-16l64 0c8.8 0 16 7.2 16 16s7.2 16 16 16l32 0c8.8 0 16-7.2 16-16s7.2-16 16-16s16 7.2 16 16l0 96c0 8.8-7.2 16-16 16l-64 0c-8.8 0-16-7.2-16-16s-7.2-16-16-16s-16 7.2-16 16l0 64c0 8.8-7.2 16-16 16l-32 0c-8.8 0-16-7.2-16-16l0-160zM368 480a16 16 0 1 1 0-32 16 16 0 1 1 0 32zm64 0a16 16 0 1 1 0-32 16 16 0 1 1 0 32z"/></svg>
+                </div>
+
+                <h3 class="text-sm text-center mt-3 text-gray-400 max-w-64" id="qrCodeText">The QR code will show here when you create a new link</h3>
+
+                <button id="downloadQrButton" class="hidden flex items-center bg-[#1f1e1e] hover:bg-[#2d2d2d] border border-[#3c3c3a] transition-all duration-200 text-[#c0c0c0] font-medium py-1.5 px-4 rounded-md w-min text-xs">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height="14" fill="#c0c0c0"><path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 242.7-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7 288 32zM64 352c-35.3 0-64 28.7-64 64l0 32c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-32c0-35.3-28.7-64-64-64l-101.5 0-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352 64 352zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"/></svg>
+                    <span class="ml-2 whitespace-nowrap">Download QR</span>
+                </button>
+
+            </div>
+
+            <script>
+                $(document).ready(function() {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const code = urlParams.get('code');
+                    const fqdn = urlParams.get('fqdn');
+
+                    if (code && fqdn) {
+                        $('#shortenedUrlText').removeClass('hidden');
+                        $('#qrCodeBox').html(`<img src="https://${fqdn}/${code}/qr/embed" class="w-full h-full" alt="QR Code">`);
+                        $('#qrCodeText').html(`<a href="https://${fqdn}/${code}" target="_blank" rel="noopener noreferrer" class="hover:underline cursor-pointer" onclick="copyToClipboard('https://${fqdn}/${code}')">https://${fqdn}/${code}</a>`);
+                        $('#downloadQrButton').removeClass('hidden').attr('href', `https://${fqdn}/${code}/qr`).attr('download', '');
+                    }
+
+                    // Remove the code and fqdn parameters from the URL
+                    urlParams.delete('code');
+                    urlParams.delete('fqdn');
+                    const newUrl = window.location.pathname + '?' + urlParams.toString();
+                    window.history.replaceState({}, document.title, newUrl);
+                });
+
+                function copyToClipboard(text) {
+                    navigator.clipboard.writeText(text).then(function() {
+                        alert('Copied to clipboard');
+                    }, function(err) {
+                        console.error('Could not copy text: ', err);
+                    });
+                }
+            </script>
+        </div>
+    </div>
+
+    <table class="w-full text-left mt-8 divide-y divide-[#2e2d2d]" style="border-spacing: 10px !important;">
+        <thead class="text-gray-400 text-xs uppercase select-none cursor-default">
+            <tr>
+                <th style="padding: 10px !important;">Short URL</th>
+                <th style="padding: 10px !important;">Redirects to</th>
+                <th style="padding: 10px !important;">Actions</th>
+            </tr>
+        </thead>
+        <tbody id="urls-tbody" class="text-gray-200 divide-y divide-[#2e2d2d]">
+            <tr>
+                <th style="padding: 10px !important;"><div class="animate-pulse h-6 w-36 bg-[#2e2d2d] rounded"></div></th>
+                <th style="padding: 10px !important;"><div class="animate-pulse h-6 w-96 bg-[#2e2d2d] rounded"></div></th>
+                <th style="padding: 10px !important;"><div class="animate-pulse h-6 w-24 bg-[#2e2d2d] rounded"></div></th>
+            </tr>
+            <tr>
+                <th style="padding: 10px !important;"><div class="animate-pulse h-6 w-32 bg-[#2e2d2d] rounded"></div></th>
+                <th style="padding: 10px !important;"><div class="animate-pulse h-6 w-72 bg-[#2e2d2d] rounded"></div></th>
+                <th style="padding: 10px !important;"><div class="animate-pulse h-6 w-24 bg-[#2e2d2d] rounded"></div></th>
+            </tr>
+            <tr>
+                <th style="padding: 10px !important;"><div class="animate-pulse h-6 w-40 bg-[#2e2d2d] rounded"></div></th>
+                <th style="padding: 10px !important;"><div class="animate-pulse h-6 w-80 bg-[#2e2d2d] rounded"></div></th>
+                <th style="padding: 10px !important;"><div class="animate-pulse h-6 w-24 bg-[#2e2d2d] rounded"></div></th>
+            </tr>
+        </tbody>
+    </table>
+
+    <div id="noentries" class="hidden flex-col h-64 w-full justify-center items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" fill="#9ca3af" class="size-3/12"><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L532.4 392c45.4-28.2 75.6-78.6 75.6-136c0-88.4-71.6-160-160-160l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0c53 0 96 43 96 96c0 43.3-28.6 79.8-67.9 91.8L399.7 288l16.3 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-97.9 0-81.7-64 19.6 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0c-11.3 0-22.3 1.2-32.9 3.4L38.8 5.1zM121 191.4L70.7 151.7C46.6 179.7 32 216.1 32 256c0 88.4 71.6 160 160 160l64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0c-53 0-96-43-96-96c0-24.9 9.5-47.6 25-64.6z"/></svg>
+        <h2 class="mt-3 text-lg text-gray-200">There are no URLs created</h2>
+        <p class="mt-1 text-base text-gray-400">Go to the top of the page to create a new short link</p>
+    </div>
+
+    <script>
+        // $('#password').on('input', function() {
+        //     if ($(this).val().length > 0) {
+        //         $('button').removeAttr('disabled');
+        //     } else {
+        //         $('button').attr('disabled', 'disabled');
+        //     }
+        // });
+
+        // $('#password').on('blur', function() {
+        //     if ($(this).val().length > 0) {
+        //         $(this).attr('data-error', 'false');
+        //         $('span').addClass('hidden');
+        //     } else {
+        //         $(this).attr('data-error', 'true');
+        //         $('span').removeClass('hidden');
+        //     }
+        // });
+
+        // $('#password').on('focus', function() {
+        //     $(this).attr('data-error', 'false');
+        //     $('span').addClass('hidden');
+        // });
+
+        $('#addWindows, #addLinux, #addAndroid, #addiOS, #addmacOS, #addChromeOS').on('click', function(e) {
+            e.preventDefault();
+            const buttonId = $(this).attr('id');
+            const divId = buttonId.replace('add', '').toLowerCase() + 'Div';
+            if ($(this).hasClass('data-[shown=true]')) {
+                $(this).removeClass('data-[shown=true]');
+                $('#' + divId).addClass('hidden');
+            } else {
+                $(this).addClass('data-[shown=true]');
+                $('#' + divId).removeClass('hidden');
+            }
+            infoOther();
+            validateForm();
+        });
+
+        $('input').on('input', function() {
+            validateForm();
+        });
+
+        function validateForm() {
+            let isValid = true;
+            $('input:visible').each(function() {
+                if (!isValidUrl($(this).val())) {
+                    isValid = false;
+                }
+            });
+            $('#submit').prop('disabled', !isValid);
+        }
+
+        function isValidUrl(url) {
+            const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|'+ // domain name
+                '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+                '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+                '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+            return !!pattern.test(url);
+        }
+
+        $('#addWindows').on('click', function() {
+            if($('#addWindows').hasClass('data-[shown=true]')) {
+                $('#addWindows span').removeClass('hidden');
+                $('#windowsDiv').addClass('hidden');
+                $('#addWindows').removeClass('data-[shown=true]');
+            } else {
+                $('#addWindows span').addClass('hidden');
+                $('#windowsDiv').removeClass('hidden');
+                $('#addWindows').addClass('data-[shown=true]');
+            }
+            infoOther();
+            validateForm();
+        });
+
+        $('#addLinux').on('click', function() {
+            if($('#addLinux').hasClass('data-[shown=true]')) {
+                $('#addLinux span').removeClass('hidden');
+                $('#linuxDiv').addClass('hidden');
+                $('#addLinux').removeClass('data-[shown=true]');
+            } else {
+                $('#addLinux span').addClass('hidden');
+                $('#linuxDiv').removeClass('hidden');
+                $('#addLinux').addClass('data-[shown=true]');
+            }
+            infoOther();
+            validateForm();
+        });
+
+        $('#addAndroid').on('click', function() {
+            if($('#addAndroid').hasClass('data-[shown=true]')) {
+                $('#addAndroid span').removeClass('hidden');
+                $('#androidDiv').addClass('hidden');
+                $('#addAndroid').removeClass('data-[shown=true]');
+            } else {
+                $('#addAndroid span').addClass('hidden');
+                $('#androidDiv').removeClass('hidden');
+                $('#addAndroid').addClass('data-[shown=true]');
+            }
+            infoOther();
+            validateForm();
+        });
+
+        $('#addiOS').on('click', function() {
+            if($('#addiOS').hasClass('data-[shown=true]')) {
+                $('#addiOS span').removeClass('hidden');
+                $('#iOSDiv').addClass('hidden');
+                $('#addiOS').removeClass('data-[shown=true]');
+            } else {
+                $('#addiOS span').addClass('hidden');
+                $('#iOSDiv').removeClass('hidden');
+                $('#addiOS').addClass('data-[shown=true]');
+            }
+            infoOther();
+            validateForm();
+        });
+
+        $('#addmacOS').on('click', function() {
+            if($('#addmacOS').hasClass('data-[shown=true]')) {
+                $('#addmacOS span').removeClass('hidden');
+                $('#macOSDiv').addClass('hidden');
+                $('#addmacOS').removeClass('data-[shown=true]');
+            } else {
+                $('#addmacOS span').addClass('hidden');
+                $('#macOSDiv').removeClass('hidden');
+                $('#addmacOS').addClass('data-[shown=true]');
+            }
+            infoOther();
+            validateForm();
+        });
+
+        $('#addChromeOS').on('click', function() {
+            if($('#addChromeOS').hasClass('data-[shown=true]')) {
+                $('#addChromeOS span').removeClass('hidden');
+                $('#chromeOSDiv').addClass('hidden');
+                $('#addChromeOS').removeClass('data-[shown=true]');
+            } else {
+                $('#addChromeOS span').addClass('hidden');
+                $('#chromeOSDiv').removeClass('hidden');
+                $('#addChromeOS').addClass('data-[shown=true]');
+            }
+            infoOther();
+            validateForm();
+        });
+
+        function infoOther() {
+            if($('#windowsDiv').hasClass('hidden') && $('#linuxDiv').hasClass('hidden') && $('#androidDiv').hasClass('hidden') && $('#iOSDiv').hasClass('hidden') && $('#macOSDiv').hasClass('hidden') && $('#chromeOSDiv').hasClass('hidden')) {
+                $('#infoOther').addClass('hidden');
+            } else {
+                $('#infoOther').removeClass('hidden');
+            }
+        }
+
+        $('.actiondelete').on('click', function() {
+            $(this).attr('disabled', 'disabled');
+            $(this).closest('tr').find('.actionqrdl').attr('disabled', 'disabled');
+        });
+
+        // let urls = [
+        //     {
+        //     "short": "https://l.rabbitxone.tech/ns7L3ns9",
+        //     "qr": "https://l.rabbitxone.tech/ns7L3ns9/qr",
+        //     "long": {
+        //         "default": "https://google.com/teapot"
+        //     },
+        //     },
+        //     {
+        //     "short": "https://l.rabbitxone.tech/3j9L3ns9",
+        //     "qr": "https://l.rabbitxone.tech/3j9L3ns9/qr",
+        //     "long": {
+        //         "windows": "https://google.com/tipot/",
+        //         "chromeos": "https://gógl.com/tipot/",
+        //     }
+        //     },
+        // ];
+
+        // let urrls = null;
+
+        // updateTable(urls)
+
+        function updateTable(urls) {
+            $('#urls-tbody').empty();
+            if(!urls || urls.length === 0) {
+                $('#urls-tbody').append('<tr></tr>');
+                $('#noentries').removeClass('hidden').addClass('flex');
+                return;
+            }
+
+            console.log(urls);
+
+            for(let url of urls) {
+                let longUrl = url.long;
+                let shortUrl = url.short;
+                let qrUrl = url.qr;
+                
+                let urlsElement = null;
+                urlsElement = '<div class="flex flex-col gap-3">';
+
+                if(longUrl.default) {
+                    urlsElement += `<div class="flex flex-row items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" height="24" fill="#e5e7eb"><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L532.4 392c45.4-28.2 75.6-78.6 75.6-136c0-88.4-71.6-160-160-160l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0c53 0 96 43 96 96c0 43.3-28.6 79.8-67.9 91.8L399.7 288l16.3 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-97.9 0-81.7-64 19.6 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0c-11.3 0-22.3 1.2-32.9 3.4L38.8 5.1zM121 191.4L70.7 151.7C46.6 179.7 32 216.1 32 256c0 88.4 71.6 160 160 160l64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0c-53 0-96-43-96-96c0-24.9 9.5-47.6 25-64.6z"/></svg>
+                        <p class="ml-3 capitalize">Other</p>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="24" fill="#e5e7eb"><path d="M0 256c0-6.6 5.4-12 12-12h248.5l-71.3-71.3c-4.7-4.7-4.7-12.3 0-17l16.9-16.9c4.7-4.7 12.3-4.7 17 0l96 96c4.7 4.7 4.7 12.3 0 17l-96 96c-4.7 4.7-12.3 4.7-17 0l-16.9-16.9c-4.7-4.7-4.7-12.3 0-17l71.3-71.3H12c-6.6 0-12-5.4-12-12z"/></svg>
+                        <p class="text-gray-400 truncate max-w-64"><a href="${longUrl.default}" class="cursor-pointer" target="_blank" rel="noopener noreferrer">${longUrl.default}</a></p>
+                        </div>`;
+                }
+                if(longUrl.windows) {
+                    urlsElement += `<div class="flex flex-row items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="24" fill="#e5e7eb"><path d="M0 32h214.6v214.6H0V32zm233.4 0H448v214.6H233.4V32zM0 265.4h214.6V480H0V265.4zm233.4 0H448V480H233.4V265.4z"/></svg>
+                        <p class="ml-3 capitalize">Windows</p>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="24" fill="#e5e7eb"><path d="M0 256c0-6.6 5.4-12 12-12h248.5l-71.3-71.3c-4.7-4.7-4.7-12.3 0-17l16.9-16.9c4.7-4.7 12.3-4.7 17 0l96 96c4.7 4.7 4.7 12.3 0 17l-96 96c-4.7 4.7-12.3 4.7-17 0l-16.9-16.9c-4.7-4.7-4.7-12.3 0-17l71.3-71.3H12c-6.6 0-12-5.4-12-12z"/></svg>
+                        <p class="text-gray-400 truncate max-w-64"><a href="${longUrl.windows}" class="cursor-pointer" target="_blank" rel="noopener noreferrer">${longUrl.windows}</a></p>
+                        </div>`;
+                }
+                if(longUrl.linux) {
+                    urlsElement += `<div class="flex flex-row items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="24" fill="#e5e7eb"><path d="M220.8 123.3c1 .5 1.8 1.7 3 1.7 1.1 0 2.8-.4 2.9-1.5.2-1.4-1.9-2.3-3.2-2.9-1.7-.7-3.9-1-5.5-.1-.4.2-.8.7-.6 1.1.3 1.3 2.3 1.1 3.4 1.7zm-21.9 1.7c1.2 0 2-1.2 3-1.7 1.1-.6 3.1-.4 3.5-1.6.2-.4-.2-.9-.6-1.1-1.6-.9-3.8-.6-5.5.1-1.3.6-3.4 1.5-3.2 2.9.1 1 1.8 1.5 2.8 1.4zM420 403.8c-3.6-4-5.3-11.6-7.2-19.7-1.8-8.1-3.9-16.8-10.5-22.4-1.3-1.1-2.6-2.1-4-2.9-1.3-.8-2.7-1.5-4.1-2 9.2-27.3 5.6-54.5-3.7-79.1-11.4-30.1-31.3-56.4-46.5-74.4-17.1-21.5-33.7-41.9-33.4-72C311.1 85.4 315.7.1 234.8 0 132.4-.2 158 103.4 156.9 135.2c-1.7 23.4-6.4 41.8-22.5 64.7-18.9 22.5-45.5 58.8-58.1 96.7-6 17.9-8.8 36.1-6.2 53.3-6.5 5.8-11.4 14.7-16.6 20.2-4.2 4.3-10.3 5.9-17 8.3s-14 6-18.5 14.5c-2.1 3.9-2.8 8.1-2.8 12.4 0 3.9.6 7.9 1.2 11.8 1.2 8.1 2.5 15.7.8 20.8-5.2 14.4-5.9 24.4-2.2 31.7 3.8 7.3 11.4 10.5 20.1 12.3 17.3 3.6 40.8 2.7 59.3 12.5 19.8 10.4 39.9 14.1 55.9 10.4 11.6-2.6 21.1-9.6 25.9-20.2 12.5-.1 26.3-5.4 48.3-6.6 14.9-1.2 33.6 5.3 55.1 4.1.6 2.3 1.4 4.6 2.5 6.7v.1c8.3 16.7 23.8 24.3 40.3 23 16.6-1.3 34.1-11 48.3-27.9 13.6-16.4 36-23.2 50.9-32.2 7.4-4.5 13.4-10.1 13.9-18.3.4-8.2-4.4-17.3-15.5-29.7zM223.7 87.3c9.8-22.2 34.2-21.8 44-.4 6.5 14.2 3.6 30.9-4.3 40.4-1.6-.8-5.9-2.6-12.6-4.9 1.1-1.2 3.1-2.7 3.9-4.6 4.8-11.8-.2-27-9.1-27.3-7.3-.5-13.9 10.8-11.8 23-4.1-2-9.4-3.5-13-4.4-1-6.9-.3-14.6 2.9-21.8zM183 75.8c10.1 0 20.8 14.2 19.1 33.5-3.5 1-7.1 2.5-10.2 4.6 1.2-8.9-3.3-20.1-9.6-19.6-8.4.7-9.8 21.2-1.8 28.1 1 .8 1.9-.2-5.9 5.5-15.6-14.6-10.5-52.1 8.4-52.1zm-13.6 60.7c6.2-4.6 13.6-10 14.1-10.5 4.7-4.4 13.5-14.2 27.9-14.2 7.1 0 15.6 2.3 25.9 8.9 6.3 4.1 11.3 4.4 22.6 9.3 8.4 3.5 13.7 9.7 10.5 18.2-2.6 7.1-11 14.4-22.7 18.1-11.1 3.6-19.8 16-38.2 14.9-3.9-.2-7-1-9.6-2.1-8-3.5-12.2-10.4-20-15-8.6-4.8-13.2-10.4-14.7-15.3-1.4-4.9 0-9 4.2-12.3zm3.3 334c-2.7 35.1-43.9 34.4-75.3 18-29.9-15.8-68.6-6.5-76.5-21.9-2.4-4.7-2.4-12.7 2.6-26.4v-.2c2.4-7.6.6-16-.6-23.9-1.2-7.8-1.8-15 .9-20 3.5-6.7 8.5-9.1 14.8-11.3 10.3-3.7 11.8-3.4 19.6-9.9 5.5-5.7 9.5-12.9 14.3-18 5.1-5.5 10-8.1 17.7-6.9 8.1 1.2 15.1 6.8 21.9 16l19.6 35.6c9.5 19.9 43.1 48.4 41 68.9zm-1.4-25.9c-4.1-6.6-9.6-13.6-14.4-19.6 7.1 0 14.2-2.2 16.7-8.9 2.3-6.2 0-14.9-7.4-24.9-13.5-18.2-38.3-32.5-38.3-32.5-13.5-8.4-21.1-18.7-24.6-29.9s-3-23.3-.3-35.2c5.2-22.9 18.6-45.2 27.2-59.2 2.3-1.7.8 3.2-8.7 20.8-8.5 16.1-24.4 53.3-2.6 82.4.6-20.7 5.5-41.8 13.8-61.5 12-27.4 37.3-74.9 39.3-112.7 1.1.8 4.6 3.2 6.2 4.1 4.6 2.7 8.1 6.7 12.6 10.3 12.4 10 28.5 9.2 42.4 1.2 6.2-3.5 11.2-7.5 15.9-9 9.9-3.1 17.8-8.6 22.3-15 7.7 30.4 25.7 74.3 37.2 95.7 6.1 11.4 18.3 35.5 23.6 64.6 3.3-.1 7 .4 10.9 1.4 13.8-35.7-11.7-74.2-23.3-84.9-4.7-4.6-4.9-6.6-2.6-6.5 12.6 11.2 29.2 33.7 35.2 59 2.8 11.6 3.3 23.7.4 35.7 16.4 6.8 35.9 17.9 30.7 34.8-2.2-.1-3.2 0-4.2 0 3.2-10.1-3.9-17.6-22.8-26.1-19.6-8.6-36-8.6-38.3 12.5-12.1 4.2-18.3 14.7-21.4 27.3-2.8 11.2-3.6 24.7-4.4 39.9-.5 7.7-3.6 18-6.8 29-32.1 22.9-76.7 32.9-114.3 7.2zm257.4-11.5c-.9 16.8-41.2 19.9-63.2 46.5-13.2 15.7-29.4 24.4-43.6 25.5s-26.5-4.8-33.7-19.3c-4.7-11.1-2.4-23.1 1.1-36.3 3.7-14.2 9.2-28.8 9.9-40.6.8-15.2 1.7-28.5 4.2-38.7 2.6-10.3 6.6-17.2 13.7-21.1.3-.2.7-.3 1-.5.8 13.2 7.3 26.6 18.8 29.5 12.6 3.3 30.7-7.5 38.4-16.3 9-.3 15.7-.9 22.6 5.1 9.9 8.5 7.1 30.3 17.1 41.6 10.6 11.6 14 19.5 13.7 24.6zM173.3 148.7c2 1.9 4.7 4.5 8 7.1 6.6 5.2 15.8 10.6 27.3 10.6 11.6 0 22.5-5.9 31.8-10.8 4.9-2.6 10.9-7 14.8-10.4s5.9-6.3 3.1-6.6-2.6 2.6-6 5.1c-4.4 3.2-9.7 7.4-13.9 9.8-7.4 4.2-19.5 10.2-29.9 10.2s-18.7-4.8-24.9-9.7c-3.1-2.5-5.7-5-7.7-6.9-1.5-1.4-1.9-4.6-4.3-4.9-1.4-.1-1.8 3.7 1.7 6.5z"/></svg>
+                        <p class="ml-3 capitalize">Linux</p>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="24" fill="#e5e7eb"><path d="M0 256c0-6.6 5.4-12 12-12h248.5l-71.3-71.3c-4.7-4.7-4.7-12.3 0-17l16.9-16.9c4.7-4.7 12.3-4.7 17 0l96 96c4.7 4.7 4.7 12.3 0 17l-96 96c-4.7 4.7-12.3 4.7-17 0l-16.9-16.9c-4.7-4.7-4.7-12.3 0-17l71.3-71.3H12c-6.6 0-12-5.4-12-12z"/></svg>
+                        <p class="text-gray-400 truncate max-w-64"><a href="${longUrl.linux}" class="cursor-pointer" target="_blank" rel="noopener noreferrer">${longUrl.linux}</a></p>
+                        </div>`;
+                }
+                if(longUrl.android) {
+                    urlsElement += `<div class="flex flex-row items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height="24" fill="#e5e7eb"><path d="M420.55,301.93a24,24,0,1,1,24-24,24,24,0,0,1-24,24m-265.1,0a24,24,0,1,1,24-24,24,24,0,0,1-24,24m273.7-144.48,47.94-83a10,10,0,1,0-17.27-10h0l-48.54,84.07a301.25,301.25,0,0,0-246.56,0L116.18,64.45a10,10,0,1,0-17.27,10h0l47.94,83C64.53,202.22,8.24,285.55,0,384H576c-8.24-98.45-64.54-181.78-146.85-226.55"/></svg>
+                        <p class="ml-3 capitalize">Android</p>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="24" fill="#e5e7eb"><path d="M0 256c0-6.6 5.4-12 12-12h248.5l-71.3-71.3c-4.7-4.7-4.7-12.3 0-17l16.9-16.9c4.7-4.7 12.3-4.7 17 0l96 96c4.7 4.7 4.7 12.3 0 17l-96 96c-4.7 4.7-12.3 4.7-17 0l-16.9-16.9c-4.7-4.7-4.7-12.3 0-17l71.3-71.3H12c-6.6 0-12-5.4-12-12z"/></svg>
+                        <p class="text-gray-400 truncate max-w-64"><a href="${longUrl.android}" class="cursor-pointer" target="_blank" rel="noopener noreferrer">${longUrl.android}</a></p>
+                        </div>`;
+                }
+                if(longUrl.ios) {
+                    urlsElement += `<div class="flex flex-row items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" height="24" fill="#e5e7eb"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+                        <p class="ml-3 capitalize">iOS</p>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="24" fill="#e5e7eb"><path d="M0 256c0-6.6 5.4-12 12-12h248.5l-71.3-71.3c-4.7-4.7-4.7-12.3 0-17l16.9-16.9c4.7-4.7 12.3-4.7 17 0l96 96c4.7 4.7 4.7 12.3 0 17l-96 96c-4.7 4.7-12.3 4.7-17 0l-16.9-16.9c-4.7-4.7-4.7-12.3 0-17l71.3-71.3H12c-6.6 0-12-5.4-12-12z"/></svg>
+                        <p class="text-gray-400 truncate max-w-64"><a href="${longUrl.ios}" class="cursor-pointer" target="_blank" rel="noopener noreferrer">${longUrl.ios}</a></p>
+                        </div>`;
+                }
+                if(longUrl.macos) {
+                    urlsElement += `<div class="flex flex-row items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" height="24" fill="#e5e7eb"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+                        <p class="ml-3 capitalize">macOS</p>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="24" fill="#e5e7eb"><path d="M0 256c0-6.6 5.4-12 12-12h248.5l-71.3-71.3c-4.7-4.7-4.7-12.3 0-17l16.9-16.9c4.7-4.7 12.3-4.7 17 0l96 96c4.7 4.7 4.7 12.3 0 17l-96 96c-4.7 4.7-12.3 4.7-17 0l-16.9-16.9c-4.7-4.7-4.7-12.3 0-17l71.3-71.3H12c-6.6 0-12-5.4-12-12z"/></svg>
+                        <p class="text-gray-400 truncate max-w-64"><a href="${longUrl.macos}" class="cursor-pointer" target="_blank" rel="noopener noreferrer">${longUrl.macos}</a></p>
+                        </div>`;
+                }
+                if(longUrl.chromeos) {
+                    urlsElement += `<div class="flex flex-row items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height="24" fill="#e5e7eb"><path d="M0 256C0 209.4 12.47 165.6 34.27 127.1L144.1 318.3C166 357.5 207.9 384 256 384C270.3 384 283.1 381.7 296.8 377.4L220.5 509.6C95.9 492.3 0 385.3 0 256zM365.1 321.6C377.4 302.4 384 279.1 384 256C384 217.8 367.2 183.5 340.7 160H493.4C505.4 189.6 512 222.1 512 256C512 397.4 397.4 511.1 256 512L365.1 321.6zM477.8 128H256C193.1 128 142.3 172.1 130.5 230.7L54.19 98.47C101 38.53 174 0 256 0C350.8 0 433.5 51.48 477.8 128V128zM168 256C168 207.4 207.4 168 256 168C304.6 168 344 207.4 344 256C344 304.6 304.6 344 256 344C207.4 344 168 304.6 168 256z"/></svg>
+                        <p class="ml-3 capitalize">ChromeOS</p>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="24" fill="#e5e7eb"><path d="M0 256c0-6.6 5.4-12 12-12h248.5l-71.3-71.3c-4.7-4.7-4.7-12.3 0-17l16.9-16.9c4.7-4.7 12.3-4.7 17 0l96 96c4.7 4.7 4.7 12.3 0 17l-96 96c-4.7 4.7-12.3 4.7-17 0l-16.9-16.9c-4.7-4.7-4.7-12.3 0-17l71.3-71.3H12c-6.6 0-12-5.4-12-12z"/></svg>
+                        <p class="text-gray-400 truncate max-w-64"><a href="${longUrl.chromeos}" class="cursor-pointer" target="_blank" rel="noopener noreferrer">${longUrl.chromeos}</a></p>
+                        </div>`;
+                }
+
+                urlsElement += '</div>';
+
+                $('#urls-tbody').append(`<tr class="hover:bg-[#222222]">
+                    <td style="padding: 10px !important;">
+                    
+                    <div class="inline-flex">
+                        
+                        <span class="urlcopy hover:underline cursor-pointer">${shortUrl}</span>
+
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="24" fill="#9ca3af" class="ml-3 hidden"><path d="M208 0L332.1 0c12.7 0 24.9 5.1 33.9 14.1l67.9 67.9c9 9 14.1 21.2 14.1 33.9L448 336c0 26.5-21.5 48-48 48l-192 0c-26.5 0-48-21.5-48-48l0-288c0-26.5 21.5-48 48-48zM48 128l80 0 0 64-64 0 0 256 192 0 0-32 64 0 0 48c0 26.5-21.5 48-48 48L48 512c-26.5 0-48-21.5-48-48L0 176c0-26.5 21.5-48 48-48z"/></svg>
+                    </div>
+
+                    </td>
+                    <td style="padding: 10px !important;">
+                    ${urlsElement}
+                    </td>
+                    <td style="padding: 10px !important;" class="w-1 whitespace-nowrap text-right">
+                    <div class="inline-flex">
+                        <a href="${qrUrl}" target="_blank" rel="noopener noreferrer" download>
+                        <button 
+                        class="tableactionbtn actionqrdl flex items-center bg-[#282827] hover:bg-[#2d2d2d] border border-[#3c3c3a] transition-all duration-200 text-[#c0c0c0] font-medium py-1.5 px-4 rounded-l-md group w-auto disabled:cursor-not-allowed disabled:bg-[#282727] disabled:text-[#878787] text-xs"
+                        data-hover-text="Download QR">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="14" fill="#c0c0c0">
+                            <path d="M0 80C0 53.5 21.5 32 48 32l96 0c26.5 0 48 21.5 48 48l0 96c0 26.5-21.5 48-48 48l-96 0c-26.5 0-48-21.5-48-48L0 80zM64 96l0 64 64 0 0-64L64 96zM0 336c0-26.5 21.5-48 48-48l96 0c26.5 0 48 21.5 48 48l0 96c0 26.5-21.5 48-48 48l-96 0c-26.5 0-48-21.5-48-48l0-96zm64 16l0 64 64 0 0-64-64 0zM304 32l96 0c26.5 0 48 21.5 48 48l0 96c0 26.5-21.5 48-48 48l-96 0c-26.5 0-48-21.5-48-48l0-96c0-26.5 21.5-48 48-48zm80 64l-64 0 0 64 64 0 0-64zM256 304c0-8.8 7.2-16 16-16l64 0c8.8 0 16 7.2 16 16s7.2 16 16 16l32 0c8.8 0 16-7.2 16-16s7.2-16 16-16s16 7.2 16 16l0 96c0 8.8-7.2 16-16 16l-64 0c-8.8 0-16-7.2-16-16s-7.2-16-16-16s-16 7.2-16 16l0 64c0 8.8-7.2 16-16 16l-32 0c-8.8 0-16-7.2-16-16l0-160zM368 480a16 16 0 1 1 0-32 16 16 0 1 1 0 32zm64 0a16 16 0 1 1 0-32 16 16 0 1 1 0 32z" />
+                        </svg>
+                        </button>
+                        </a>
+                    
+                        <button 
+                        class="tableactionbtn actiondelete flex items-center bg-[#282827] hover:bg-[#2d2d2d] border border-[#3c3c3a] border-l-0 transition-all duration-200 text-[#c0c0c0] font-medium py-1.5 px-4 rounded-r-md group w-auto disabled:cursor-not-allowed disabled:bg-[#282727] disabled:text-[#878787] text-xs"
+                        data-hover-text="Delete" value="${url.code}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="14" fill="#c0c0c0">
+                            <path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0L284.2 0c12.1 0 23.2 6.8 28.6 17.7L320 32l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 96C14.3 96 0 81.7 0 64S14.3 32 32 32l96 0 7.2-14.3zM32 128l384 0 0 320c0 35.3-28.7 64-64 64L96 512c-35.3 0-64-28.7-64-64l0-320zm96 64c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16z" />
+                        </svg>
+                        </button>
+                    </div>                    
+                    </td>
+                </tr>`);
+            }
+        }
+
+        $(document).ready(function() {
+            // jQuery to handle hover effects
+            $(document).on('mouseenter', '.tableactionbtn', function() {
+            const hoverText = $(this).data('hover-text');
+            $(this).append(`<span class="ml-2">${hoverText}</span>`);
+            });
+
+            $(document).on('mouseleave', '.tableactionbtn', function() {
+            $(this).find('span').remove();
+            });
+
+            $(document).on('click', '.actiondelete', function() {
+            const code = $(this).val();
+            const url = `/delete/${code}`;
+            $.ajax({
+                url: url,
+                method: 'DELETE',
+                success: function(data) {
+                console.log('Deleted URL:', data);
+                // Remove the row from the table without reloading the page
+                $(`button[value="${code}"]`).closest('tr').remove();
+                window.location.reload();
+                },
+                error: function(error) {
+                console.error('Error deleting URL:', error);
+                }
+            });
+            });
+        });
+
+        $('#addWindows').on('click', function() {
+            if($('#addWindows').hasClass('data-[shown=true]')) {
+                $('#addWindows span').removeClass('hidden');
+                $('#windowsDiv').addClass('hidden');
+                $('#addWindows').removeClass('data-[shown=true]');
+            } else {
+                $('#addWindows span').addClass('hidden');
+                $('#windowsDiv').removeClass('hidden');
+                $('#addWindows').addClass('data-[shown=true]');
+            }
+            infoOther();
+        });
+
+        $('#addLinux').on('click', function() {
+            if($('#addLinux').hasClass('data-[shown=true]')) {
+                $('#addLinux span').removeClass('hidden');
+                $('#linuxDiv').addClass('hidden');
+                $('#addLinux').removeClass('data-[shown=true]');
+            } else {
+                $('#addLinux span').addClass('hidden');
+                $('#linuxDiv').removeClass('hidden');
+                $('#addLinux').addClass('data-[shown=true]');
+            }
+            infoOther();
+        });
+
+        $('#addAndroid').on('click', function() {
+            if($('#addAndroid').hasClass('data-[shown=true]')) {
+                $('#addAndroid span').removeClass('hidden');
+                $('#androidDiv').addClass('hidden');
+                $('#addAndroid').removeClass('data-[shown=true]');
+            } else {
+                $('#addAndroid span').addClass('hidden');
+                $('#androidDiv').removeClass('hidden');
+                $('#addAndroid').addClass('data-[shown=true]');
+            }
+            infoOther();
+        });
+
+        $('#addiOS').on('click', function() {
+            if($('#addiOS').hasClass('data-[shown=true]')) {
+                $('#addiOS span').removeClass('hidden');
+                $('#iOSDiv').addClass('hidden');
+                $('#addiOS').removeClass('data-[shown=true]');
+            } else {
+                $('#addiOS span').addClass('hidden');
+                $('#iOSDiv').removeClass('hidden');
+                $('#addiOS').addClass('data-[shown=true]');
+            }
+            infoOther();
+        });
+
+        $('#addmacOS').on('click', function() {
+            if($('#addmacOS').hasClass('data-[shown=true]')) {
+                $('#addmacOS span').removeClass('hidden');
+                $('#macOSDiv').addClass('hidden');
+                $('#addmacOS').removeClass('data-[shown=true]');
+            } else {
+                $('#addmacOS span').addClass('hidden');
+                $('#macOSDiv').removeClass('hidden');
+                $('#addmacOS').addClass('data-[shown=true]');
+            }
+            infoOther();
+        });
+
+        $('#addChromeOS').on('click', function() {
+            if($('#addChromeOS').hasClass('data-[shown=true]')) {
+                $('#addChromeOS span').removeClass('hidden');
+                $('#chromeOSDiv').addClass('hidden');
+                $('#addChromeOS').removeClass('data-[shown=true]');
+            } else {
+                $('#addChromeOS span').addClass('hidden');
+                $('#chromeOSDiv').removeClass('hidden');
+                $('#addChromeOS').addClass('data-[shown=true]');
+            }
+            infoOther();
+        });
+
+        $(document).ready(function() {
+            $.ajax({
+                url: '/geturls',
+                method: 'GET',
+                success: function(data) {
+                    updateTable(data);
+                },
+                error: function(error) {
+                    console.error('Error fetching URLs:', error);
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>

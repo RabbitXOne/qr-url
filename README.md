@@ -1,0 +1,1 @@
+Simple website for shortening URLs. Additionaly, it allows to redirect users on devices on specific operating systems to be redirected to different URLs.
