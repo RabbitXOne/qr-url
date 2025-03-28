@@ -32,7 +32,7 @@ const sessions = session({
     resave: false,
     saveUninitialized: true,
     cookie: { 
-        secure: true,
+        secure: false,
         maxAge: 60000,
         sameSite: true,
         httpOnly: true
