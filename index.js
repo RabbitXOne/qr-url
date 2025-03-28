@@ -56,11 +56,21 @@ app.get('/dashboard', (req, res) => {
     }
 });
 
+app.get('/logout', async (req, res) => {
+    req.session.logged = false;
+    res.redirect('/');
+});
+
 app.get('/tailwind.css', (req, res) => {
     res.sendFile(__dirname + '/html/tailwind.css');
 });
 
 app.get('/geturls', async (req, res) => {
+    if(!req.session.logged || req.session.logged !== true) {
+        res.redirect('/');
+        return;
+    }
+
     let urls = await storage.getItem('urls');
     if(!urls || urls === undefined) {
         urls = [];
@@ -155,7 +165,7 @@ app.delete('/delete/:id', async (req, res) => {
 
 app.get('/:id', async (req, res) => {
     const id = req.params.id;
-    if(id === 'dashboard' || id === 'tailwind.css' || id === 'favicon.ico' || id === 'socket.io.js' || id === 'geturls' || id === 'add' || id === 'delete') return;
+    if(id === 'dashboard' || id === 'tailwind.css' || id === 'favicon.ico' || id === 'socket.io.js' || id === 'geturls' || id === 'add' || id === 'delete' || id === 'logout') return;
 
     // Get user's operating system
     const os = req.headers['user-agent'].split(') ')[0].split(' (')[1];
@@ -193,7 +203,7 @@ app.get('/:id', async (req, res) => {
 app.get('/:id/qr', async (req, res) => {
     // Download QR code
     const id = req.params.id;
-    if(id === 'dashboard' || id === 'tailwind.css' || id === 'favicon.ico' || id === 'socket.io.js' || id === 'geturls' || id === 'add' || id === 'delete') return;
+    if(id === 'dashboard' || id === 'tailwind.css' || id === 'favicon.ico' || id === 'socket.io.js' || id === 'geturls' || id === 'add' || id === 'delete' || id === 'logout') return;
 
     const filePath = __dirname + '/qr/' + id + '.png';
     res.sendFile(filePath, {
@@ -206,7 +216,7 @@ app.get('/:id/qr', async (req, res) => {
 app.get('/:id/qr/embed', async (req, res) => {
     // Embed QR code in HTML
     const id = req.params.id;
-    if(id === 'dashboard' || id === 'tailwind.css' || id === 'favicon.ico' || id === 'socket.io.js' || id === 'geturls' || id === 'add' || id === 'delete') return;
+    if(id === 'dashboard' || id === 'tailwind.css' || id === 'favicon.ico' || id === 'socket.io.js' || id === 'geturls' || id === 'add' || id === 'delete' || id === 'logout') return;
 
     res.sendFile(__dirname + '/qr/' + id + '.png');
 });
