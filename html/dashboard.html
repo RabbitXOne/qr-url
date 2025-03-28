@@ -544,6 +544,20 @@
             }
         }
 
+        $(document).on('click', '.urlcopy', function() {
+            const textToCopy = $(this).text();
+            navigator.clipboard.writeText(textToCopy)
+                .then(function() {
+                    $(this).removeClass('hover:underline');
+                    setTimeout(function() {
+                        $(this).addClass('hover:underline'); 
+                    }.bind(this), 100);
+                }.bind(this))
+                .catch(function(err) {
+                    console.error('Could not copy text: ', err);
+                });
+        });
+
         $(document).ready(function() {
             // jQuery to handle hover effects
             $(document).on('mouseenter', '.tableactionbtn', function() {

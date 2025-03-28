@@ -6,7 +6,6 @@ const app = express();
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const storage = require('node-persist');
-const { MongoClient } = require('mongodb');
 require('dotenv').config();
 
 storage.initSync();
