@@ -39,6 +39,7 @@ const sessions = session({
 });
 
 app.use(sessions);
+app.set('trust proxy', 1);
 
 app.get('/', (req, res) => {
     if(req.session.logged) {
